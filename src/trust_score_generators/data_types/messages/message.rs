@@ -17,3 +17,12 @@ pub enum Message{
         payments: Vec<String>
     }
 }
+
+pub fn is_tx_msg(msg: &Message) -> bool {
+    match msg {
+        Message::TransactionMsg 
+            {contract: _, witnesses: _, wit_node_sigs: _, tx_client_sigs: _}
+                => return true,
+        _       => return false
+    };
+}

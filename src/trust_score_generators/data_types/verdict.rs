@@ -1,9 +1,7 @@
 use crate::trust_score_generators::{
     data_types::{
-        message, verdict,
-        messages::signatures::{
-            WitnessSig, TransactingSig, PullDID
-        }
+        verdict,
+        messages::signatures::Sig
     },
 };
 
@@ -19,18 +17,19 @@ pub struct ParticipantVerdict {
 }
 
 pub fn generate_tx_verdict<S>(
-    msgs: &Vec<S>,
+    sigs: &Vec<S>,
     verdicts: Vec<f32>
 ) -> TxVerdict
-    where S: PullDID
+    where S: Sig
 {
-    let verdicts: Vec<verdict::ParticipantVerdict> = msgs
+    let verdicts: Vec<verdict::ParticipantVerdict> = sigs
             .iter()
-            .map(|sig| {
+            .enumerate()
+            .map(|(i, sig)| {
                 let did_pubkey = sig.get_did_pubkey();
                 return verdict::ParticipantVerdict{
                     did_public_key: did_pubkey,
-                    estimated_reliablility: 1.0
+                    estimated_reliablility: verdicts[i]
                 }
             })
             .collect();

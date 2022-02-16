@@ -58,18 +58,25 @@ pub fn extract_sig_from_wn_sig_struct(sig_struct: WitnessSig) -> Vec<u8> {
     }
 }
 
-pub trait PullDID {
+pub trait Sig {
     fn get_did_pubkey(&self) -> String;
+    fn get_channel_pubkey(&self) -> String;
 }
 
-impl PullDID for WitnessSig {
+impl Sig for WitnessSig {
     fn get_did_pubkey(&self) -> String {
         return self.signer_did_pubkey.clone();
     }
+    fn get_channel_pubkey(&self) -> String {
+        return self.signer_channel_pubkey.clone();
+    }
 }
 
-impl PullDID for TransactingSig {
+impl Sig for TransactingSig {
     fn get_did_pubkey(&self) -> String {
         return self.signer_did_pubkey.clone();
+    }
+    fn get_channel_pubkey(&self) -> String {
+        return self.signer_channel_pubkey.clone();
     }
 }
