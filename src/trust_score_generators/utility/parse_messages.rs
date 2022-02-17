@@ -12,26 +12,44 @@ use crate::trust_score_generators::{
 
 use anyhow::Result;
 
+pub fn parse_messages(message_and_pubkey: Vec<(String, String)>) -> Result<Vec<message::MessageAndPubkey>> {
+    let mut parsed_msgs: Vec<message::MessageAndPubkey> = Vec::new();
+    
+    // if the first message is not the transaction message, the function will panic in the call to parse_to_message
+    let (msg, sigs) = parse_to_message(message_and_pubkey[0].clone(), None)?;
+    let unwrapped_sigs = sigs.unwrap();
+    parsed_msgs.push(msg);
+
+    for i in 1..message_and_pubkey.len() {
+        let (msg, _) = parse_to_message(message_and_pubkey[i].clone(), Some(&unwrapped_sigs))?;
+        parsed_msgs.push(msg);
+    }
+
+    return Ok(parsed_msgs);
+}
+
 // Parses a message and pubkey (as strings) to a MessageAndPubkey object.
 // Because when the first message is processes, the sigs won't yet be available,
 // this function accepts sigs as an option. However, if sigs is None, than the
 // message must be the tx_msg
 pub fn parse_to_message(
     message_and_pubkey: (String, String),
-    sigs: Option<Vec<Box<dyn Sig>>>
-) -> Result<message::MessageAndPubkey> {
+    sigs: Option<&Vec<Box<dyn Sig>>>
+) -> Result<(message::MessageAndPubkey, Option<Vec<Box<dyn Sig>>>)> {
     let (msg, channel_pk) = message_and_pubkey;
     let deserialised_msg: Message = serde_json::from_str(msg.as_str())?;
     
     if let None = sigs {
         // extract the sigs if it is the tx_msg
         if is_tx_msg(&deserialised_msg) {
-            let extracted_sigs = get_sigs(deserialised_msg.clone());
+            let extracted_sigs = get_sigs(deserialised_msg.clone()).unwrap();
 
-            return Ok(message::MessageAndPubkey{
+            let to_ret = message::MessageAndPubkey {
                 message: deserialised_msg,
-                sender_did: get_did::find_did_pk_from_channel_pk(extracted_sigs.unwrap(), channel_pk).unwrap()
-            })
+                sender_did: get_did::find_did_pk_from_channel_pk(&extracted_sigs, channel_pk).unwrap()
+            };
+
+            return Ok((to_ret, Some(extracted_sigs)));
         }
         // panic if it's not the tx_msg
         else {
@@ -39,10 +57,13 @@ pub fn parse_to_message(
         }
     }
 
-    return Ok(message::MessageAndPubkey{
+    let to_ret = message::MessageAndPubkey {
         message: deserialised_msg,
         sender_did: get_did::find_did_pk_from_channel_pk(sigs.unwrap(), channel_pk).unwrap()
-    })
+    };
+
+    return Ok((to_ret, None));
+
 }
 
 pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
