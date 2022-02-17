@@ -1,9 +1,6 @@
 use crate::trust_score_generators::{
     data_types::{
         message, verdict,
-        messages::signatures::{
-            WitnessSig, TransactingSig, Sig
-        }
     },
 };
 
@@ -11,6 +8,9 @@ pub enum HonestWho{
     Witnesses,
     TransactingNodes
 }
+
+pub type Outcome = Vec<bool>;
+pub struct KnownOutcome(pub Outcome);
 
 /// The trivial tsg will either assume honestly of the particpants or
 /// witnesses. So there are 4 possible outcomes, 1) assume participant
@@ -21,7 +21,10 @@ pub enum HonestWho{
 /// 
 /// Returns the verdicts for the transacting nodes, and then the witnesses
 /// 
-pub fn tsg(msgs: Vec<message::MessageAndPubkey>, assume_honest: HonestWho) -> (verdict::TxVerdict, verdict::TxVerdict){
+pub fn tsg_assume_group(
+    msgs: Vec<message::MessageAndPubkey>,
+    assume_honest: HonestWho
+) -> (verdict::TxVerdict, verdict::TxVerdict){
 
     // after the tx has been verified, these sigs can act as temporary identities of the participants
     let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
@@ -67,4 +70,51 @@ pub fn tsg(msgs: Vec<message::MessageAndPubkey>, assume_honest: HonestWho) -> (v
 
         return (tn_verdicts, wn_verdicts);
     }
+}
+
+/// The trivial tsg will work off the knowledge of a participating
+/// or watching user. The options are 1) we know the outcome was true
+/// so anybody who disagrees is dishonest, or 2) we know the outcome 
+/// was false, so the blamed tn and whichever witnesses disagree are
+/// dishonest.
+/// 
+/// Returns the verdicts for the transacting nodes, and then the witnesses
+/// 
+pub fn tsg_know_outcome(
+    msgs: Vec<message::MessageAndPubkey>,
+    KnownOutcome(outcome): KnownOutcome
+) -> (verdict::TxVerdict, verdict::TxVerdict) {
+    let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
+
+    // determine verdict for witnesses
+    let mut wn_verdicts_outcomes: Vec<f32> = Vec::new();
+    for msg in msgs.clone(){
+        // only look at the witness statements
+        if message::is_witness_statement_msg(&msg) {
+            let witness_statement = message::get_witness_statement(&msg).unwrap();
+            let to_check_with = outcome.clone();
+
+            // if the witness statement agrees with the known outcome, they are honest
+            if witness_statement == to_check_with{
+                wn_verdicts_outcomes.push(1.0);
+            } else {
+                wn_verdicts_outcomes.push(0.0);
+            }
+        }
+    }
+
+    // determine verdict for transacting nodes
+    let mut tn_verdicts_outcomes: Vec<f32> = Vec::new();
+    for participant_outcome in outcome {
+        if participant_outcome {
+            tn_verdicts_outcomes.push(1.0);
+        } else {
+            tn_verdicts_outcomes.push(0.0);
+        }
+    }
+
+    let tn_verdicts = verdict::generate_tx_verdict(&wn_sigs, tn_verdicts_outcomes);
+    let wn_verdicts = verdict::generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
+
+    return (tn_verdicts, wn_verdicts)
 }

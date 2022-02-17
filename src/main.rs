@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let message_and_pubkey2 = (msg, String::from("z8Q1L9E4nbBhDbduQmiABJxAgfywRsiSYkznhF71rgTy3"));
 
     // wn 2 msg
-    let msg = String::from("{\"WitnessStatement\":{\"outcome\":[true,true]}}");
+    let msg = String::from("{\"WitnessStatement\":{\"outcome\":[false,true]}}");
     let message_and_pubkey3 = (msg, String::from("z9qDrjFiAbG7Q953ocFD9QrWkUo5RCubhF93XRS9NkgjW"));
 
     // wn 1 msg
@@ -38,10 +38,10 @@ fn main() -> Result<()> {
     let to_pass = vec![message_and_pubkey1, message_and_pubkey2, message_and_pubkey3, message_and_pubkey4, message_and_pubkey5];
     let msgs_and_pks = parse_messages::parse_messages(to_pass).unwrap();
 
-    let (tn_ver, wn_ver) = trivial_tsg::tsg(msgs_and_pks, trivial_tsg::HonestWho::TransactingNodes);
+    let (tn_ver, wn_ver) = trivial_tsg::tsg_assume_group(msgs_and_pks, trivial_tsg::HonestWho::TransactingNodes);
 
-    println!("{:?}", tn_ver);
-    println!("{:?}", wn_ver);
+    println!("\n{:?}", tn_ver);
+    println!("\n{:?}", wn_ver);
 
     return Ok(());
 }
