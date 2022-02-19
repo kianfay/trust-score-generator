@@ -15,8 +15,6 @@ pub struct Contract {
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TransactingClients   (pub Vec<PublicKey>);
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct WitnessClients       (pub Vec<PublicKey>);
 
 pub type PublicKey = String;
 

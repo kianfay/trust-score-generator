@@ -1,6 +1,6 @@
 use crate::trust_score_generators::data_types::messages::{
     contract::{
-        Contract, WitnessClients
+        Contract, PublicKey
     },
     signatures::{
         transacting_sig::TransactingSig,
@@ -25,6 +25,10 @@ pub enum Message{
         payments: Payments
     }
 }
+
+// an array of bytes representing the pubkey of the participant
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct WitnessClients       (pub Vec<PublicKey>);
 
 // signitures are also simply arrays of bytes
 #[derive(Serialize, Deserialize, Clone, Debug)]
