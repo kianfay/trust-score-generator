@@ -1,8 +1,7 @@
-use crate::trust_score_generators::{
-    data_types::{
-        verdict,
-        messages::signatures::Sig
-    },
+use crate::trust_score_generators::data_types::messages::{
+    signatures::{
+        sig::Sig
+    }
 };
 
 #[derive(Clone, Debug)]
@@ -22,19 +21,19 @@ pub fn generate_tx_verdict<S>(
 ) -> TxVerdict
     where S: Sig
 {
-    let verdicts: Vec<verdict::ParticipantVerdict> = sigs
+    let verdicts: Vec<ParticipantVerdict> = sigs
             .iter()
             .enumerate()
             .map(|(i, sig)| {
                 let did_pubkey = sig.get_did_pubkey();
-                return verdict::ParticipantVerdict{
+                return ParticipantVerdict{
                     did_public_key: did_pubkey,
                     estimated_reliablility: verdicts[i]
                 }
             })
             .collect();
         
-        return verdict::TxVerdict {
+        return TxVerdict {
             verdicts: verdicts
         }
 }

@@ -2,8 +2,8 @@ use crate::trust_score_generators::{
     data_types::{
         message, verdict,
         messages::{
-            signatures,
-            transaction_msgs::{Outcome}
+            signatures::witness_sig,
+            tx_messages::{Outcome}
         }
     },
     predict_outcome
@@ -29,7 +29,7 @@ pub fn tsg_assume_group(
 ) -> (verdict::TxVerdict, verdict::TxVerdict){
 
     // after the tx has been verified, these sigs can act as temporary identities of the participants
-    let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
+    let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
     // a test to see the sigs stored together
     //let sigs: Vec<Box<dyn Sig>> = vec![Box::new(tn_sigs[0]), Box::new(wn_sigs[0])];
@@ -38,8 +38,8 @@ pub fn tsg_assume_group(
     let mut all_true = true;
     for msg in msgs.clone(){
         // only look at the witness statements
-        if message::is_witness_statement_msg(&msg) {
-            let witness_statement = message::get_witness_statement(&msg).unwrap();
+        if msg.is_witness_statement_msg() {
+            let witness_statement = msg.get_witness_statement().unwrap();
             let to_check_with = vec![true; witness_statement.len()];
 
             // if the witness statement indicates a true output for all tns, we skip this
@@ -86,14 +86,14 @@ pub fn tsg_know_outcome(
     msgs: Vec<message::MessageAndPubkey>,
     outcome: Outcome
 ) -> (verdict::TxVerdict, verdict::TxVerdict) {
-    let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
+    let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
     // determine verdict for witnesses
     let mut wn_verdicts_outcomes: Vec<f32> = Vec::new();
     for msg in msgs.clone(){
         // only look at the witness statements
-        if message::is_witness_statement_msg(&msg) {
-            let witness_statement = message::get_witness_statement(&msg).unwrap();
+        if msg.is_witness_statement_msg() {
+            let witness_statement = msg.get_witness_statement().unwrap();
             let to_check_with = outcome.clone();
 
             // if the witness statement agrees with the known outcome, they are honest
@@ -134,18 +134,18 @@ pub fn tsg_organization(
     default_reliability: f32
 ) -> (verdict::TxVerdict, verdict::TxVerdict) {
     // after the tx has been verified, these sigs can act as temporary identities of the participants
-    let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
+    let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
     // predicts the outcome by sassigning reliability scores to witnesses and averaging the outcomes
     let mut witness_statements: Vec<Outcome> = Vec::new();
     let mut witness_reliabilities: Vec<f32> = Vec::new();
     for msg in msgs.clone() {
-        if message::is_witness_statement_msg(&msg) {
-            let witness_statement = message::get_witness_statement(&msg).unwrap();
+        if msg.is_witness_statement_msg() {
+            let witness_statement = msg.get_witness_statement().unwrap();
             witness_statements.push(witness_statement);
 
             // find the signature associated to the message sender, and extract the org_cert's pubkey
-            let cur_did = signatures::find_associated_wnsig(wn_sigs.clone(), msg.sender_did).unwrap();
+            let cur_did = witness_sig::find_associated_wnsig(wn_sigs.clone(), msg.sender_did).unwrap();
             if org_pubkey == cur_did.org_cert.org_pubkey {
                 println!("here1");
                 witness_reliabilities.push(1.0);

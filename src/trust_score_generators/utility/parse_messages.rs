@@ -2,9 +2,8 @@ use crate::trust_score_generators::{
     utility::get_did,
     data_types::{
         messages::{
-            transaction_msgs::{ArrayOfTxSignitures, ArrayOfWnSignitures},
-            signatures::Sig,
-            message::{Message, is_tx_msg}
+            signatures::sig::Sig,
+            tx_messages::{Message, ArrayOfTxSignitures, ArrayOfWnSignitures, is_tx_msg}
         },
         message
     }

@@ -1,6 +1,6 @@
 use crate::trust_score_generators::{
     data_types::{
-        messages::transaction_msgs::{Outcome}
+        messages::tx_messages::{Outcome}
     },
 };
 
