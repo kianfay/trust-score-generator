@@ -1,4 +1,3 @@
-pub mod setup_msgs;
 pub mod signatures;
-pub mod transaction_msgs;
-pub mod message;
+pub mod contract;
+pub mod tx_messages;

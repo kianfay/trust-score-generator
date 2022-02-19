@@ -1,5 +1,3 @@
-use crate::trust_score_generators::data_types::messages::signatures::{WitnessSig, TransactingSig};
-
 use serde::{Deserialize, Serialize};
 
 ////
@@ -28,23 +26,3 @@ pub type UnixTimestamp = u64;
 // CoordinateDMSFormat(North Ordinate, West Ordinate)
 pub type CoordinateDMSFormat = (Ordinate,Ordinate);
 pub type Ordinate = (u16,u16,f32);
-
-// signitures are also simply arrays of bytes
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct ArrayOfTxSignitures(pub Vec<TransactingSig>);
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct ArrayOfWnSignitures(pub Vec<WitnessSig>);
-
-////
-//// DATA FORMATS FOR THE WITNESS STATEMENT
-////
-
-/// outcomes for a witness statement
-pub type Outcome = Vec<bool>;
-
-////
-//// DATA FORMATS FOR THE COMPENSATION MESSAGE
-////
-
-/// payments for a compensation message
-pub type Payments = Vec<String>;
