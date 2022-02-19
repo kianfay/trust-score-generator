@@ -1,1 +1,1 @@
-mod trust_score_generators;
+pub mod trust_score_generators;
