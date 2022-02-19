@@ -1,16 +1,18 @@
 use crate::trust_score_generators::{
     data_types::{
         message, verdict,
+        messages::{
+            signatures,
+            transaction_msgs::{Outcome}
+        }
     },
+    predict_outcome
 };
 
 pub enum HonestWho{
     Witnesses,
     TransactingNodes
 }
-
-pub type Outcome = Vec<bool>;
-pub struct KnownOutcome(pub Outcome);
 
 /// The trivial tsg will either assume honestly of the particpants or
 /// witnesses. So there are 4 possible outcomes, 1) assume participant
@@ -82,7 +84,7 @@ pub fn tsg_assume_group(
 /// 
 pub fn tsg_know_outcome(
     msgs: Vec<message::MessageAndPubkey>,
-    KnownOutcome(outcome): KnownOutcome
+    outcome: Outcome
 ) -> (verdict::TxVerdict, verdict::TxVerdict) {
     let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
 
@@ -113,8 +115,48 @@ pub fn tsg_know_outcome(
         }
     }
 
-    let tn_verdicts = verdict::generate_tx_verdict(&wn_sigs, tn_verdicts_outcomes);
+    let tn_verdicts = verdict::generate_tx_verdict(&tn_sigs, tn_verdicts_outcomes);
     let wn_verdicts = verdict::generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
 
     return (tn_verdicts, wn_verdicts)
+}
+
+/// The trivial tsg will work off the assumption that participants
+/// from a certain group are more reliable. Does so by assigning 
+/// differentreliabilities to participants in the organization, vs 
+/// those outside.
+/// 
+/// Returns the verdicts for the transacting nodes, and then the witnesses
+/// 
+pub fn tsg_organization(
+    msgs: Vec<message::MessageAndPubkey>,
+    org_pubkey: String,
+    default_reliability: f32
+) -> (verdict::TxVerdict, verdict::TxVerdict) {
+    // after the tx has been verified, these sigs can act as temporary identities of the participants
+    let (tn_sigs, wn_sigs) = message::get_sigs_of_participants(&msgs[0]).unwrap();
+
+    // predicts the outcome by sassigning reliability scores to witnesses and averaging the outcomes
+    let mut witness_statements: Vec<Outcome> = Vec::new();
+    let mut witness_reliabilities: Vec<f32> = Vec::new();
+    for msg in msgs.clone() {
+        if message::is_witness_statement_msg(&msg) {
+            let witness_statement = message::get_witness_statement(&msg).unwrap();
+            witness_statements.push(witness_statement);
+
+            // find the signature associated to the message sender, and extract the org_cert's pubkey
+            let cur_did = signatures::find_associated_wnsig(wn_sigs.clone(), msg.sender_did).unwrap();
+            if org_pubkey == cur_did.org_cert.org_pubkey {
+                println!("here1");
+                witness_reliabilities.push(1.0);
+            } else {
+                println!("here2");
+                witness_reliabilities.push(default_reliability);
+            }
+        }
+    }
+    let predicted_outcome = predict_outcome::predict_outcome(witness_statements, witness_reliabilities);
+    println!("{:?}", predicted_outcome);
+
+    return tsg_know_outcome(msgs, predicted_outcome);
 }

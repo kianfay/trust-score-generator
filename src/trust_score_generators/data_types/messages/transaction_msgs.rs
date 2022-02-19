@@ -2,13 +2,9 @@ use crate::trust_score_generators::data_types::messages::signatures::{WitnessSig
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct TransactionMsg {
-    pub contract: Contract,
-	pub witnesses: WitnessClients,
-    pub wit_node_sigs: ArrayOfWnSignitures,
-	pub tx_client_sigs: ArrayOfTxSignitures,
-}
+////
+//// DATA FORMATS FOR THE TRANSACTION MESSAGE
+////
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Contract {
@@ -38,3 +34,17 @@ pub type Ordinate = (u16,u16,f32);
 pub struct ArrayOfTxSignitures(pub Vec<TransactingSig>);
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ArrayOfWnSignitures(pub Vec<WitnessSig>);
+
+////
+//// DATA FORMATS FOR THE WITNESS STATEMENT
+////
+
+/// outcomes for a witness statement
+pub type Outcome = Vec<bool>;
+
+////
+//// DATA FORMATS FOR THE COMPENSATION MESSAGE
+////
+
+/// payments for a compensation message
+pub type Payments = Vec<String>;

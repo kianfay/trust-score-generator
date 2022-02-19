@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Message{
     WitnessStatement {
-        outcome: Vec<bool>
+        outcome: transaction_msgs::Outcome
     },
     TransactionMsg {
         contract: transaction_msgs::Contract,
@@ -14,7 +14,7 @@ pub enum Message{
         tx_client_sigs: transaction_msgs::ArrayOfTxSignitures,
     },
     CompensationMsg {
-        payments: Vec<String>
+        payments: transaction_msgs::Payments
     }
 }
 
