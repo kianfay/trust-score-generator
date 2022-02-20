@@ -147,10 +147,8 @@ pub fn tsg_organization(
             // find the signature associated to the message sender, and extract the org_cert's pubkey
             let cur_did = witness_sig::find_associated_wnsig(wn_sigs.clone(), msg.sender_did).unwrap();
             if org_pubkey == cur_did.org_cert.org_pubkey {
-                println!("here1");
                 witness_reliabilities.push(1.0);
             } else {
-                println!("here2");
                 witness_reliabilities.push(default_reliability);
             }
         }
