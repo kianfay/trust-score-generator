@@ -4,7 +4,7 @@ use crate::trust_score_generators::data_types::messages::signatures::sig;
 // Uses the signature as ID for the participants
 pub fn find_did_pk_from_channel_pk(
     participants: &Vec<Box<dyn sig::Sig>>,
-    channel_pk: String
+    channel_pk: &str
 ) -> Option<String>
 {
     for part in participants {

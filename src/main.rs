@@ -28,7 +28,7 @@ fn main() -> Result<()> {
     let message_and_pubkey5 = (msg, String::from("zCYhZ2hM29Kg2WGwSuutryNPHATkZZ7RZjbeCvREvSbUT"));
 
     let to_pass = vec![message_and_pubkey1, message_and_pubkey2, message_and_pubkey3, message_and_pubkey4, message_and_pubkey5];
-    let msgs_and_pks = parse_messages::parse_messages(to_pass).unwrap();
+    let msgs_and_pks = parse_messages::parse_messages(&to_pass).unwrap();
 
     let (tn_ver, wn_ver) = trivial_tsg::tsg_assume_group(msgs_and_pks, trivial_tsg::HonestWho::TransactingNodes);
 

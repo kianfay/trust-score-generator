@@ -11,16 +11,16 @@ use crate::trust_score_generators::{
 
 use anyhow::Result;
 
-pub fn parse_messages(message_and_pubkey: Vec<(String, String)>) -> Result<Vec<message::MessageAndPubkey>> {
+pub fn parse_messages(message_and_pubkey: &Vec<(String, String)>) -> Result<Vec<message::MessageAndPubkey>> {
     let mut parsed_msgs: Vec<message::MessageAndPubkey> = Vec::new();
     
     // if the first message is not the transaction message, the function will panic in the call to parse_to_message
-    let (msg, sigs) = parse_to_message(message_and_pubkey[0].clone(), None)?;
+    let (msg, sigs) = parse_to_message(&message_and_pubkey[0], None)?;
     let unwrapped_sigs = sigs.unwrap();
     parsed_msgs.push(msg);
 
     for i in 1..message_and_pubkey.len() {
-        let (msg, _) = parse_to_message(message_and_pubkey[i].clone(), Some(&unwrapped_sigs))?;
+        let (msg, _) = parse_to_message(&message_and_pubkey[i], Some(&unwrapped_sigs))?;
         parsed_msgs.push(msg);
     }
 
@@ -32,7 +32,7 @@ pub fn parse_messages(message_and_pubkey: Vec<(String, String)>) -> Result<Vec<m
 // this function accepts sigs as an option. However, if sigs is None, than the
 // message must be the tx_msg
 pub fn parse_to_message(
-    message_and_pubkey: (String, String),
+    message_and_pubkey: &(String, String),
     sigs: Option<&Vec<Box<dyn Sig>>>
 ) -> Result<(message::MessageAndPubkey, Option<Vec<Box<dyn Sig>>>)> {
     let (msg, channel_pk) = message_and_pubkey;
