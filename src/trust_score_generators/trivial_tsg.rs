@@ -154,6 +154,7 @@ pub fn tsg_organization(
         }
     }
     let predicted_outcome = predict_outcome::predict_outcome(witness_statements, witness_reliabilities);
+    println!("{:?}", predicted_outcome);
 
     return tsg_know_outcome(msgs, predicted_outcome);
 }

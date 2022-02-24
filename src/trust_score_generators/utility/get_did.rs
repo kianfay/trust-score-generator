@@ -7,7 +7,11 @@ pub fn find_did_pk_from_channel_pk(
     channel_pk: &str
 ) -> Option<String>
 {
+    println!("Checking {} against:", channel_pk);
     for part in participants {
+        // DEBUG
+        println!("{}", part.get_channel_pubkey());
+
         if channel_pk == part.get_channel_pubkey() {
             return Some(part.get_did_pubkey());
         }
