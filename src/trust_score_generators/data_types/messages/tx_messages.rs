@@ -27,7 +27,8 @@ pub enum Message{
 }
 
 // an array of bytes representing the pubkey of the participant
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug,
+         Eq, PartialEq, Ord, PartialOrd)]
 pub struct WitnessClients       (pub Vec<PublicKey>);
 
 // signitures are also simply arrays of bytes
