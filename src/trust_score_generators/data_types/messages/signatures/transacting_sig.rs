@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 // contains the data being signed
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TransactingPreSig {
-    pub contract: String,
+    pub contract: Vec<u8>,
     pub signer_channel_pubkey: String,
     pub wit_node_sigs: Vec<u8>,
     pub org_cert: OrgCert,
