@@ -18,8 +18,7 @@ use serde::{Deserialize, Serialize};
 pub struct TransactingPreSig {
     pub contract: String,
     pub signer_channel_pubkey: String,
-    pub witnesses: String,
-    pub wit_node_sigs: String,
+    pub wit_node_sigs: Vec<u8>,
     pub org_cert: OrgCert,
     pub timeout: u32,
 }
@@ -27,10 +26,9 @@ pub struct TransactingPreSig {
 // contains the data and a signature, as well the the key to verify with
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TransactingSig {
-    pub contract: String,
+    pub contract: Vec<u8>,
     pub signer_channel_pubkey: String,
-    pub witnesses: String,
-    pub wit_node_sigs: String,
+    pub wit_node_sigs: Vec<u8>,
     pub org_cert: OrgCert,
     pub timeout: u32,
     pub signer_did_pubkey: String,
