@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 // contains the data being signed
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WitnessPreSig {
-    pub contract: Contract,
+    pub contract: String,
     pub signer_channel_pubkey: String,
     pub org_cert: OrgCert,
     pub timeout: u32,
@@ -24,7 +24,7 @@ pub struct WitnessPreSig {
 // contains the data and a signature, as well the the key to verify with
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WitnessSig {
-    pub contract: Contract,
+    pub contract: String,
     pub signer_channel_pubkey: String,
     pub org_cert: OrgCert,
     pub timeout: u32,
