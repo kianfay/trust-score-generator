@@ -3,7 +3,7 @@ use crate::trust_score_generators::data_types::messages::{
         Contract, PublicKey
     },
     signatures::{
-        transacting_sig::TransactingSig,
+        interaction_sig::InteractionSig,
         witness_sig::WitnessSig
     }
 };
@@ -15,11 +15,11 @@ pub enum Message{
     WitnessStatement {
         outcome: Outcome
     },
-    TransactionMsg {
+    InteractionMsg {
         contract: Contract,
         witnesses: WitnessClients,
         wit_node_sigs: ArrayOfWnSignitures,
-        tx_client_sigs: ArrayOfTxSignitures,
+        tx_client_sigs: ArrayOfInSignitures,
     },
     CompensationMsg {
         payments: Payments
@@ -37,7 +37,7 @@ impl WitnessClients {
 
 // signitures are also simply arrays of bytes
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct ArrayOfTxSignitures(pub Vec<TransactingSig>);
+pub struct ArrayOfInSignitures(pub Vec<InteractionSig>);
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ArrayOfWnSignitures(pub Vec<WitnessSig>);
@@ -47,7 +47,7 @@ pub type Payments = Vec<String>;
 
 pub fn is_tx_msg(msg: &Message) -> bool {
     match msg {
-        Message::TransactionMsg 
+        Message::InteractionMsg 
             {contract: _, witnesses: _, wit_node_sigs: _, tx_client_sigs: _}
                 => return true,
         _       => return false

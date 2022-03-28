@@ -25,13 +25,20 @@ pub struct TransactingPreSig {
 
 // contains the data and a signature, as well the the key to verify with
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct TransactingSig {
+pub struct InteractionSig {
+    /// Hash of the contract
     pub contract: Vec<u8>,
+    /// Signer channel public key
     pub signer_channel_pubkey: String,
+    /// Hash of the combined witness sigs
     pub wit_node_sigs: Vec<u8>,
+    // Organization certificate
     pub org_cert: OrgCert,
+    // The timeout for the transaction
     pub timeout: u32,
+    // The signer's DID public key
     pub signer_did_pubkey: String,
+    // Signature for this information
     pub signature: Vec<u8>,
 }
 
@@ -39,7 +46,7 @@ pub struct TransactingSig {
 pub struct ArrayOfWnSignituresBytes(pub Vec<Vec<u8>>);
 
 
-impl Sig for TransactingSig {
+impl Sig for InteractionSig {
     fn get_did_pubkey(&self) -> String {
         return self.signer_did_pubkey.clone();
     }

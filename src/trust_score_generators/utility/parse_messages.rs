@@ -3,7 +3,7 @@ use crate::trust_score_generators::{
     data_types::{
         messages::{
             signatures::sig::Sig,
-            tx_messages::{Message, ArrayOfTxSignitures, ArrayOfWnSignitures, is_tx_msg}
+            tx_messages::{Message, ArrayOfInSignitures, ArrayOfWnSignitures, is_tx_msg}
         },
         message
     }
@@ -67,14 +67,14 @@ pub fn parse_to_message(
 
 pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
     match tx {
-        Message::TransactionMsg {
+        Message::InteractionMsg {
             contract: _,
             witnesses: _,
             wit_node_sigs,
             tx_client_sigs,
         } => {
             let ArrayOfWnSignitures(wit_sigs) = wit_node_sigs;
-            let ArrayOfTxSignitures(tn_sigs) = tx_client_sigs;
+            let ArrayOfInSignitures(tn_sigs) = tx_client_sigs;
 
             // combine these arrays of types WitnessSig and TransactingSig
             // respectively into an array of Sig
