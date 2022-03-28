@@ -1,6 +1,6 @@
 use crate::trust_score_generators::data_types::messages::{
     signatures::{
-        transacting_sig::TransactingSig,
+        interaction_sig::InteractionSig,
         witness_sig::WitnessSig
     },
     tx_messages::{
@@ -22,7 +22,7 @@ impl MessageAndPubkey{
                 sender_did: _
             } => {
                 match message {
-                    Message::TransactionMsg {
+                    Message::InteractionMsg {
                         contract: _, witnesses: _,
                         wit_node_sigs: _, tx_client_sigs: _,
                     } => return true,
@@ -68,9 +68,9 @@ impl MessageAndPubkey{
         }
     }
 
-    // Expects a MessageAndPubkey object with a TransactionMessage inside. Returns
+    // Expects a MessageAndPubkey object with a InteractionMsg inside. Returns
     // a tuple with the sigs of transacting nodes and then the of witnesses
-    pub fn get_sigs_of_participants(&self) -> Option<(Vec<TransactingSig>, Vec<WitnessSig>)> {
+    pub fn get_sigs_of_participants(&self) -> Option<(Vec<InteractionSig>, Vec<WitnessSig>)> {
         if !self.is_tx_msg() {
             return None;
         }
@@ -81,7 +81,7 @@ impl MessageAndPubkey{
                 sender_did: _
             } => {
                 match message {
-                    Message::TransactionMsg {
+                    Message::InteractionMsg {
                         contract: _, witnesses: _,
                         wit_node_sigs: ArrayOfWnSignitures(wit_node_sigs),
                         tx_client_sigs: ArrayOfTxSignitures(tx_client_sigs),

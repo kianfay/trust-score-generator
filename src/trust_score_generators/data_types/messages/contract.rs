@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 ////
-//// DATA FORMATS FOR THE TRANSACTION MESSAGE
+//// DATA FORMATS FOR THE INTERACTION MESSAGE
 ////
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

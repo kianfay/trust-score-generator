@@ -14,7 +14,7 @@ use anyhow::Result;
 pub fn parse_messages(message_and_pubkey: &Vec<(String, String)>) -> Result<Vec<message::MessageAndPubkey>> {
     let mut parsed_msgs: Vec<message::MessageAndPubkey> = Vec::new();
     
-    // if the first message is not the transaction message, the function will panic in the call to parse_to_message
+    // if the first message is not the interaction message, the function will panic in the call to parse_to_message
     let (msg, sigs) = parse_to_message(&message_and_pubkey[0], None)?;
     let unwrapped_sigs = sigs.unwrap();
     parsed_msgs.push(msg);
@@ -52,7 +52,7 @@ pub fn parse_to_message(
         }
         // panic if it's not the tx_msg
         else {
-            panic!("First message must be a TransactionMessage")
+            panic!("First message must be a InteractionMsg")
         }
     }
 
@@ -67,7 +67,7 @@ pub fn parse_to_message(
 
 pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
     match tx {
-        Message::TransactionMsg {
+        Message::InteractionMsg {
             contract: _,
             witnesses: _,
             wit_node_sigs,
