@@ -5,12 +5,21 @@ use serde::{Deserialize, Serialize};
 ////
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct Contract {
-    pub contract_definition: String,               
-	pub participants: TransactingClients,          
+pub struct ContractWrapper {
+    pub contract: Contract,               
+}
+
+pub struct ExchangeContract {
+	pub application_name: String,
+	pub offer: String,
+	pub participants: TransactingClients,
+	pub compensation: CompensationJson
 	pub time: UnixTimestamp,
 	pub location: CoordinateDMSFormat,
 }
+
+pub trait Contract {}
+impl Contract for ExchangeContract {}
 
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]
