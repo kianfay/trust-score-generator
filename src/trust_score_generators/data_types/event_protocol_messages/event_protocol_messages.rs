@@ -1,5 +1,5 @@
 use crate::trust_score_generators::data_types::event_protocol_messages::{
-    application_messages::exchange_app_messages::{ApplicationMsg},
+    application_messages::exchange_app_messages::{CompensationMsg},
     contracts::{
         utility_types::{PublicKey, UserOrWitnesses},
         exchange_app_contract::ExchangeContract,
@@ -14,7 +14,7 @@ use crate::trust_score_generators::data_types::event_protocol_messages::{
 use serde::{Deserialize, Serialize};
 
 ////
-//// MESSAGES
+//// GENERIC MESSAGES
 ////
 
 // The top level types, such as InteractionMsg and WitnessStatement, are common
@@ -32,6 +32,15 @@ pub enum Message{
         tx_client_sigs: ArrayOfTxSignitures,
     },
     ApplicationMsg(ApplicationMsg)
+}
+
+////
+//// APPLICATION UTLITY TYPES
+////
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub enum ApplicationMsg {
+    CompensationMsg(CompensationMsg)
 }
 
 ////
