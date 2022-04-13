@@ -1,9 +1,11 @@
 use crate::trust_score_generators::{
     utility::get_did,
     data_types::{
-        messages::{
+        event_protocol_messages::{
             signatures::sig::Sig,
-            event_protocol_messages::{Message, ArrayOfTxSignitures, ArrayOfWnSignitures, is_tx_msg}
+            event_protocol_messages::{
+                Message, ArrayOfTxSignitures, ArrayOfWnSignitures
+            }
         },
         message
     }
@@ -96,5 +98,14 @@ pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
             return Some(combined_vec);
         }
         _ => return None
+    };
+}
+
+pub fn is_tx_msg(msg: &Message) -> bool {
+    match msg {
+        Message::InteractionMsg 
+            {contract: _, witnesses: _, wit_node_sigs: _, tx_client_sigs: _}
+                => return true,
+        _       => return false
     };
 }

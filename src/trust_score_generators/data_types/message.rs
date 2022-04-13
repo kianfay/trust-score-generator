@@ -1,11 +1,14 @@
-use crate::trust_score_generators::data_types::messages::{
-    signatures::{
-        interaction_sig::InteractionSig,
-        witness_sig::WitnessSig
+use crate::trust_score_generators::{
+    data_types::event_protocol_messages::{
+        signatures::{
+            interaction_sig::InteractionSig,
+            witness_sig::WitnessSig
+        },
+        event_protocol_messages::{
+            ArrayOfTxSignitures, ArrayOfWnSignitures, Message
+        },
     },
-    event_protocol_messages::{
-        ArrayOfTxSignitures, ArrayOfWnSignitures, Message
-    },
+    utility::parse_messages::is_tx_msg as is_tx_msg_low_level
 };
 
 #[derive(Clone, Debug)]
@@ -21,13 +24,7 @@ impl MessageAndPubkey{
                 message,
                 sender_did: _
             } => {
-                match message {
-                    Message::InteractionMsg {
-                        contract: _, witnesses: _,
-                        wit_node_sigs: _, tx_client_sigs: _,
-                    } => return true,
-                    _ => return false
-                }
+                is_tx_msg_low_level(message)
             }
         }
     }

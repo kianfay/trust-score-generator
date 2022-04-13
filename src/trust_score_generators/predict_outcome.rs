@@ -1,6 +1,6 @@
 use crate::trust_score_generators::{
     data_types::{
-        messages::event_protocol_messages::{Outcome}
+        event_protocol_messages::event_protocol_messages::{Outcome}
     },
 };
 

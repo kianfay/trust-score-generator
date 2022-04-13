@@ -1,7 +1,5 @@
-use crate::trust_score_generators::data_types::messages::{
-    contracts::contract::{
-        Contract
-    },
+use crate::trust_score_generators::data_types::event_protocol_messages::{
+    event_protocol_messages::Contract,
     signatures::{
         organization_cert::{
             OrgCert

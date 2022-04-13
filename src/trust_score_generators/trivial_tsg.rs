@@ -1,7 +1,7 @@
 use crate::trust_score_generators::{
     data_types::{
         message, verdict,
-        messages::{
+        event_protocol_messages::{
             signatures::witness_sig,
             event_protocol_messages::{Outcome}
         }
