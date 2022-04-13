@@ -1,7 +1,7 @@
 use crate::trust_score_generators::data_types::event_protocol_messages::{
     application_messages::exchange_app_messages::{CompensationMsg},
     contracts::{
-        utility_types::{PublicKey, UserOrWitnesses},
+        utility_types::{WitnessUsers},
         exchange_app_contract::ExchangeContract,
         meeting_app_contract::MeetingContract
     },
@@ -47,9 +47,6 @@ pub enum ApplicationMsg {
 //// MESSAGES UTLITY TYPES
 ////
 
-// an array of bytes representing the pubkey of the participant
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct WitnessUsers       (pub Vec<PublicKey>);
 // signitures are also simply arrays of bytes
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ArrayOfTxSignitures(pub Vec<InteractionSig>);

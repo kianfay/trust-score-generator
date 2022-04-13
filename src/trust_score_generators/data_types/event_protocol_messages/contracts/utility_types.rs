@@ -4,6 +4,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ParticipantUsers   (pub Vec<PublicKey>);
 
+// an array of bytes representing the pubkey of the participant
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct WitnessUsers       (pub Vec<PublicKey>);
+
 // compensation json
 pub type CompensationJson = Vec<(UserOrWitnesses, f32)>;
 #[derive(Serialize, Deserialize, Clone, Debug)]

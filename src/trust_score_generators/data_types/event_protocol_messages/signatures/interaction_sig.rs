@@ -1,7 +1,8 @@
 use crate::trust_score_generators::data_types::event_protocol_messages::{
     event_protocol_messages::{
-        WitnessUsers, Contract
+        Contract
     },
+    contracts::utility_types::WitnessUsers,
     signatures::{
         organization_cert::{
             OrgCert
