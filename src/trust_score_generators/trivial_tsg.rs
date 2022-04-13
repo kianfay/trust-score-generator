@@ -3,7 +3,7 @@ use crate::trust_score_generators::{
         message, verdict,
         messages::{
             signatures::witness_sig,
-            tx_messages::{Outcome}
+            event_protocol_messages::{Outcome}
         }
     },
     predict_outcome

@@ -3,7 +3,7 @@ use crate::trust_score_generators::{
     data_types::{
         messages::{
             signatures::sig::Sig,
-            tx_messages::{Message, ArrayOfTxSignitures, ArrayOfWnSignitures, is_tx_msg}
+            event_protocol_messages::{Message, ArrayOfTxSignitures, ArrayOfWnSignitures, is_tx_msg}
         },
         message
     }

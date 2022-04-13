@@ -1,3 +1,4 @@
 pub mod signatures;
-pub mod contract;
-pub mod tx_messages;
+pub mod contracts;
+pub mod application_messages;
+pub mod event_protocol_messages;

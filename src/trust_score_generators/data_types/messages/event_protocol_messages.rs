@@ -1,5 +1,6 @@
 use crate::trust_score_generators::data_types::messages::{
-    contract::{
+    application_messages::exchange_app_messages::{ApplicationMsg},
+    contracts::contract::{
         Contract, PublicKey
     },
     signatures::{
@@ -10,6 +11,9 @@ use crate::trust_score_generators::data_types::messages::{
 
 use serde::{Deserialize, Serialize};
 
+// The top level types, such as InteractionMsg and WitnessStatement, are common
+// for all applications of the event protocol. The ApplicationMsg allows for
+// the inclusion of application specific messages.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Message{
     WitnessStatement {
@@ -24,15 +28,6 @@ pub enum Message{
     ApplicationMsg(ApplicationMsg)
 }
 
-// Application messages. Designed such that all possible applications messages
-// need to be included in the ApplicationMsg enum
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub enum ApplicationMsg {
-    CompensationMsg {
-        payments: Payments
-    }
-}
-
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WitnessClients       (pub Vec<PublicKey>);
@@ -45,7 +40,6 @@ pub struct ArrayOfTxSignitures(pub Vec<InteractionSig>);
 pub struct ArrayOfWnSignitures(pub Vec<WitnessSig>);
 
 pub type Outcome = Vec<bool>;
-pub type Payments = Vec<String>;
 
 pub fn is_tx_msg(msg: &Message) -> bool {
     match msg {

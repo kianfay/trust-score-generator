@@ -1,5 +1,5 @@
 use crate::trust_score_generators::data_types::messages::{
-    contract::{
+    contracts::contract::{
         Contract
     },
     signatures::{

@@ -3,7 +3,7 @@ use crate::trust_score_generators::data_types::messages::{
         interaction_sig::InteractionSig,
         witness_sig::WitnessSig
     },
-    tx_messages::{
+    event_protocol_messages::{
         ArrayOfTxSignitures, ArrayOfWnSignitures, Message
     },
 };
