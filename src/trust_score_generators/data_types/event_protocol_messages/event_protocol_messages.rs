@@ -69,12 +69,3 @@ pub enum Contract {
 	ExchangeContract(ExchangeContract),
 	MeetingContract(MeetingContract)
 }
-
-////
-//// GENERIC CONTRACT UTILITY TYPES
-////
-
-// an array of bytes representing the pubkey of the participant
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct TransactingClients   (pub Vec<PublicKey>);
-pub type CompensationJson = Vec<(UserOrWitnesses, f32)>;
