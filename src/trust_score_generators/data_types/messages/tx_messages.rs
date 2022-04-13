@@ -21,6 +21,13 @@ pub enum Message{
         wit_node_sigs: ArrayOfWnSignitures,
         tx_client_sigs: ArrayOfTxSignitures,
     },
+    ApplicationMsg(ApplicationMsg)
+}
+
+// Application messages. Designed such that all possible applications messages
+// need to be included in the ApplicationMsg enum
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub enum ApplicationMsg {
     CompensationMsg {
         payments: Payments
     }
