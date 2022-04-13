@@ -27,7 +27,7 @@ pub enum Message{
     },
     InteractionMsg {
         contract: Contract,
-        witnesses: WitnessClients,
+        witnesses: WitnessUsers,
         wit_node_sigs: ArrayOfWnSignitures,
         tx_client_sigs: ArrayOfTxSignitures,
     },
@@ -49,7 +49,7 @@ pub enum ApplicationMsg {
 
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct WitnessClients       (pub Vec<PublicKey>);
+pub struct WitnessUsers       (pub Vec<PublicKey>);
 // signitures are also simply arrays of bytes
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ArrayOfTxSignitures(pub Vec<InteractionSig>);

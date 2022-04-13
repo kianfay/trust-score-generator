@@ -1,6 +1,6 @@
 use crate::trust_score_generators::data_types::event_protocol_messages::{
     event_protocol_messages::{
-        WitnessClients, Contract
+        WitnessUsers, Contract
     },
     signatures::{
         organization_cert::{
@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 pub struct InteractionPreSig {
     pub contract: Contract,
     pub signer_channel_pubkey: String,
-    pub witnesses: WitnessClients,
+    pub witnesses: WitnessUsers,
     pub wit_node_sigs: ArrayOfWnSignituresBytes,
     pub org_cert: OrgCert,
     pub timeout: u32,
@@ -28,7 +28,7 @@ pub struct InteractionPreSig {
 pub struct InteractionSig {
     pub contract: Contract,
     pub signer_channel_pubkey: String,
-    pub witnesses: WitnessClients,
+    pub witnesses: WitnessUsers,
     pub wit_node_sigs: ArrayOfWnSignituresBytes,
     pub org_cert: OrgCert,
     pub timeout: u32,

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct TransactingClients   (pub Vec<PublicKey>);
+pub struct ParticipantUsers   (pub Vec<PublicKey>);
 
 // compensation json
 pub type CompensationJson = Vec<(UserOrWitnesses, f32)>;
