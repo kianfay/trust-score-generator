@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 ////
 //// EXCHANGE APPLICATION CONTRACT
 ////
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct ExchangeContract {
 	pub offer: String,
 	pub participants: ParticipantUsers,

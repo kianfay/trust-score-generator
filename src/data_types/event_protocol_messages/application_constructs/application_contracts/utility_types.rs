@@ -1,17 +1,17 @@
 use serde::{Deserialize, Serialize};
 
 // an array of bytes representing the pubkey of the participant
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct ParticipantUsers   (pub Vec<ParticipantMap>);
 pub type ParticipantMap = Vec<(PublicKey, String)>;
 
 // an array of bytes representing the pubkey of the participant
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct WitnessUsers       (pub Vec<PublicKey>);
 
 // compensation json
 pub type CompensationJson = Vec<(UserOrWitnesses, f32)>;
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub enum UserOrWitnesses {
 	User(String),
 	Witnesses
