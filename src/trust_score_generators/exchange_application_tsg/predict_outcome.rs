@@ -1,14 +1,16 @@
-use crate::trust_score_generators::{
-    data_types::{
-        event_protocol_messages::event_protocol_messages::{Outcome}
-    },
+use crate::data_types::{
+    event_protocol_messages::{
+        application_constructs::application_outcomes::exchange_app_outcome::{
+            ExchangeOutcome
+        }
+    }
 };
 
 // A simple prediction algorithm which averages out the weighting of the
 // outcomes to come to a single prediction. Assumes all outcomes are of the
 // same length
 pub fn predict_outcome(
-    witness_statements: Vec<Outcome>,
+    witness_statements: Vec<ExchangeOutcome>,
     reliabilities: Vec<f32>
 ) -> Vec<bool> {
     let outcomes_per_stmt = witness_statements[0].len();

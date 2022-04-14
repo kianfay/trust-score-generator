@@ -1,8 +1,9 @@
-use crate::trust_score_generators::data_types::event_protocol_messages::contracts::{
-	utility_types::{
-		ParticipantUsers, CompensationJson, UnixTimestamp,
-		CoordinateDMSFormat
-	}
+use crate::data_types::event_protocol_messages::
+	application_constructs::application_contracts::{
+		utility_types::{
+			ParticipantUsers, CompensationJson, UnixTimestamp,
+			CoordinateDMSFormat
+		}
 };
 
 use serde::{Deserialize, Serialize};

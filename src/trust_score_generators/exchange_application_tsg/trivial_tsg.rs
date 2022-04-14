@@ -1,12 +1,17 @@
-use crate::trust_score_generators::{
+use crate::{
     data_types::{
-        message, verdict,
+        tsg_data_types::{
+            message, verdict
+        },
         event_protocol_messages::{
             signatures::witness_sig,
-            event_protocol_messages::{Outcome}
+            event_protocol_messages::{Outcome},
+            application_constructs::application_outcomes::exchange_app_outcome::{
+                ExchangeOutcome
+            }
         }
     },
-    predict_outcome
+    trust_score_generators::exchange_application_tsg::predict_outcome
 };
 
 pub enum HonestWho{
@@ -26,7 +31,7 @@ pub enum HonestWho{
 pub fn tsg_assume_group(
     msgs: Vec<message::MessageAndPubkey>,
     assume_honest: HonestWho
-) -> (verdict::TxVerdict, verdict::TxVerdict){
+) -> Option<(verdict::TxVerdict, verdict::TxVerdict)>{
 
     // after the tx has been verified, these sigs can act as temporary identities of the participants
     let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
@@ -39,12 +44,17 @@ pub fn tsg_assume_group(
     for msg in msgs.clone(){
         // only look at the witness statements
         if msg.is_witness_statement_msg() {
-            let witness_statement = msg.get_witness_statement().unwrap();
-            let to_check_with = vec![true; witness_statement.len()];
+            let witness_statement: Outcome = msg.get_witness_statement().unwrap();
+            match witness_statement {
+                Outcome::ExchangeApplication(outcome) => {
+                    let to_check_with = vec![true; outcome.len()];
 
-            // if the witness statement indicates a true output for all tns, we skip this
-            if !(witness_statement == to_check_with){
-                all_true = false;
+                    // if the witness statement indicates a true output for all tns, we skip this
+                    if !(outcome == to_check_with){
+                        all_true = false;
+                    }
+                }
+                _ => return None
             }
         }
     }
@@ -59,7 +69,7 @@ pub fn tsg_assume_group(
         let wn_verdicts_outcomes = vec![1.0; wn_sigs.len()];
         let wn_verdicts = verdict::generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
 
-        return (tn_verdicts, wn_verdicts);
+        return Some((tn_verdicts, wn_verdicts));
     } 
     else {
         let (tn_verdicts_outcomes, wn_verdicts_outcomes) = 
@@ -70,7 +80,7 @@ pub fn tsg_assume_group(
         let tn_verdicts = verdict::generate_tx_verdict(&tn_sigs, tn_verdicts_outcomes);
         let wn_verdicts = verdict::generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
 
-        return (tn_verdicts, wn_verdicts);
+        return Some((tn_verdicts, wn_verdicts));
     }
 }
 
@@ -84,8 +94,8 @@ pub fn tsg_assume_group(
 /// 
 pub fn tsg_know_outcome(
     msgs: Vec<message::MessageAndPubkey>,
-    outcome: Outcome
-) -> (verdict::TxVerdict, verdict::TxVerdict) {
+    known_outcome: ExchangeOutcome
+) -> Option<(verdict::TxVerdict, verdict::TxVerdict)> {
     let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
     // determine verdict for witnesses
@@ -94,20 +104,26 @@ pub fn tsg_know_outcome(
         // only look at the witness statements
         if msg.is_witness_statement_msg() {
             let witness_statement = msg.get_witness_statement().unwrap();
-            let to_check_with = outcome.clone();
 
-            // if the witness statement agrees with the known outcome, they are honest
-            if witness_statement == to_check_with{
-                wn_verdicts_outcomes.push(1.0);
-            } else {
-                wn_verdicts_outcomes.push(0.0);
+            match witness_statement {
+                Outcome::ExchangeApplication(outcome) => {  
+                    let to_check_with = known_outcome.clone();
+
+                    // if the witness statement agrees with the known outcome, they are honest
+                    if outcome == to_check_with{
+                        wn_verdicts_outcomes.push(1.0);
+                    } else {
+                        wn_verdicts_outcomes.push(0.0);
+                    }
+                }
+                _ => return None
             }
         }
     }
 
     // determine verdict for transacting nodes
     let mut tn_verdicts_outcomes: Vec<f32> = Vec::new();
-    for participant_outcome in outcome {
+    for participant_outcome in known_outcome {
         if participant_outcome {
             tn_verdicts_outcomes.push(1.0);
         } else {
@@ -118,7 +134,7 @@ pub fn tsg_know_outcome(
     let tn_verdicts = verdict::generate_tx_verdict(&tn_sigs, tn_verdicts_outcomes);
     let wn_verdicts = verdict::generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
 
-    return (tn_verdicts, wn_verdicts)
+    return Some((tn_verdicts, wn_verdicts))
 }
 
 /// The trivial tsg will work off the assumption that participants
@@ -153,7 +169,17 @@ pub fn tsg_organization(
             }
         }
     }
-    let predicted_outcome = predict_outcome::predict_outcome(witness_statements, witness_reliabilities);
 
-    return tsg_know_outcome(msgs, predicted_outcome);
+    let outcomes: Vec<Vec<bool>> = witness_statements.into_iter().map(|ws| {
+        match ws{
+            Outcome::ExchangeApplication(outcome) => {
+                return outcome;
+            },
+            _ => panic!("Not an exhange outcome")
+        }
+    }).collect();
+
+    let predicted_outcome = predict_outcome::predict_outcome(outcomes, witness_reliabilities);
+
+    return tsg_know_outcome(msgs, predicted_outcome).unwrap();
 }

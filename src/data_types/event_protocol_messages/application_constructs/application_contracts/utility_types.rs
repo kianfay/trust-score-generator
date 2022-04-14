@@ -2,7 +2,8 @@ use serde::{Deserialize, Serialize};
 
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct ParticipantUsers   (pub Vec<PublicKey>);
+pub struct ParticipantUsers   (pub Vec<ParticipantMap>);
+pub type ParticipantMap = Vec<(PublicKey, String)>;
 
 // an array of bytes representing the pubkey of the participant
 #[derive(Serialize, Deserialize, Clone, Debug)]

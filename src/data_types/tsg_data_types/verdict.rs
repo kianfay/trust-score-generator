@@ -1,4 +1,4 @@
-use crate::trust_score_generators::data_types::event_protocol_messages::{
+use crate::data_types::event_protocol_messages::{
     signatures::{
         sig::Sig
     }

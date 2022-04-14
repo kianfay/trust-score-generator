@@ -1,4 +1,4 @@
-use crate::trust_score_generators::data_types::event_protocol_messages::signatures::sig;
+use crate::data_types::event_protocol_messages::signatures::sig;
 
 // Searches through each participant to see if the channel pk matches that of the participant.
 // Uses the signature as ID for the participants

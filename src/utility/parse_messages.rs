@@ -1,4 +1,4 @@
-use crate::trust_score_generators::{
+use crate::{
     utility::get_did,
     data_types::{
         event_protocol_messages::{
@@ -7,7 +7,7 @@ use crate::trust_score_generators::{
                 Message, ArrayOfTxSignitures, ArrayOfWnSignitures
             }
         },
-        message
+        tsg_data_types::message
     }
 };
 

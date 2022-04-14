@@ -1,5 +1,9 @@
-use crate::trust_score_generators::{
+use crate::{
     data_types::event_protocol_messages::{
+        event_protocol_messages::Outcome,
+        application_constructs::application_outcomes::{
+            exchange_app_outcome::ExchangeOutcome
+        },
         signatures::{
             interaction_sig::InteractionSig,
             witness_sig::WitnessSig
@@ -45,7 +49,7 @@ impl MessageAndPubkey{
         }
     }
 
-    pub fn get_witness_statement(&self) -> Option<Vec<bool>> {
+    pub fn get_witness_statement(&self) -> Option<Outcome> {
         if !self.is_witness_statement_msg() {
             return None;
         }
@@ -58,7 +62,9 @@ impl MessageAndPubkey{
                 match message {
                     Message::WitnessStatement {
                         outcome
-                    } => return Some(outcome.clone()),
+                    } => {
+                        Some(outcome.clone())
+                    },
                     _ => return None
                 }
             }

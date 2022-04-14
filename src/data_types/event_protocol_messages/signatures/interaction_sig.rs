@@ -1,8 +1,8 @@
-use crate::trust_score_generators::data_types::event_protocol_messages::{
+use crate::data_types::event_protocol_messages::{
     event_protocol_messages::{
         Contract
     },
-    contracts::utility_types::WitnessUsers,
+    application_constructs::application_contracts::utility_types::WitnessUsers,
     signatures::{
         organization_cert::{
             OrgCert
