@@ -146,9 +146,9 @@ fn test_trivial_tsg_organization() {
 //// HELPER FUNCTIONS
 ////
 
-fn get_reliabilities(tx_verdict: verdict::TxVerdict) -> Vec<f32> {
+fn get_reliabilities(tx_verdict: verdict::Verdict) -> Vec<f32> {
     match tx_verdict {
-        verdict::TxVerdict {
+        verdict::Verdict {
             verdicts
         } => {
             return verdicts.iter().map(|ver| ver.estimated_reliablility).collect();

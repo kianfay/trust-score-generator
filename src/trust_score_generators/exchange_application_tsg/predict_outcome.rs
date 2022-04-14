@@ -11,7 +11,7 @@ use crate::data_types::{
 // same length
 pub fn predict_outcome(
     witness_statements: Vec<ExchangeOutcome>,
-    reliabilities: Vec<f32>
+    reputations: Vec<f32>
 ) -> Vec<bool> {
     let outcomes_per_stmt = witness_statements[0].len();
     let mut result = vec![0.0; outcomes_per_stmt];
@@ -20,8 +20,8 @@ pub fn predict_outcome(
         for j in 0..outcomes_per_stmt {
             let cur_outcome = witness_statements[i][j];
             let to_add = match cur_outcome {
-                true => 1.0 * reliabilities[i],
-                false => -1.0 * reliabilities[i]
+                true => 1.0 * reputations[i],
+                false => -1.0 * reputations[i]
             };
 
             result[j] += to_add;

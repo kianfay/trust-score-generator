@@ -5,7 +5,7 @@ use crate::data_types::event_protocol_messages::{
 };
 
 #[derive(Clone, Debug)]
-pub struct TxVerdict {
+pub struct Verdict {
     pub verdicts: Vec<ParticipantVerdict>
 }
 
@@ -18,7 +18,7 @@ pub struct ParticipantVerdict {
 pub fn generate_tx_verdict<S>(
     sigs: &Vec<S>,
     verdicts: Vec<f32>
-) -> TxVerdict
+) -> Verdict
     where S: Sig
 {
     let verdicts: Vec<ParticipantVerdict> = sigs
@@ -33,7 +33,7 @@ pub fn generate_tx_verdict<S>(
             })
             .collect();
         
-        return TxVerdict {
+        return Verdict {
             verdicts: verdicts
         }
 }

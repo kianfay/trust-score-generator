@@ -1,7 +1,9 @@
 use crate::{
     data_types::{
         tsg_data_types::{
-            message, verdict
+            message, verdict::{
+                generate_tx_verdict, Verdict
+            }
         },
         event_protocol_messages::{
             signatures::witness_sig,
@@ -11,7 +13,10 @@ use crate::{
             }
         }
     },
-    trust_score_generators::exchange_application_tsg::predict_outcome
+    trust_score_generators::{
+        tsg_framework::TsgFramework,
+        exchange_application_tsg::predict_outcome
+    }
 };
 
 pub enum HonestWho{
@@ -28,10 +33,10 @@ pub enum HonestWho{
 /// 
 /// Returns the verdicts for the transacting nodes, and then the witnesses
 /// 
-pub fn tsg_assume_group(
+/* pub fn tsg_assume_group(
     msgs: Vec<message::MessageAndPubkey>,
     assume_honest: HonestWho
-) -> Option<(verdict::TxVerdict, verdict::TxVerdict)>{
+) -> Option<(verdict::Verdict, verdict::Verdict)>{
 
     // after the tx has been verified, these sigs can act as temporary identities of the participants
     let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
@@ -82,7 +87,7 @@ pub fn tsg_assume_group(
 
         return Some((tn_verdicts, wn_verdicts));
     }
-}
+} */
 
 /// The trivial tsg will work off the knowledge of a participating
 /// or watching user. The options are 1) we know the outcome was true
@@ -91,11 +96,21 @@ pub fn tsg_assume_group(
 /// dishonest.
 /// 
 /// Returns the verdicts for the transacting nodes, and then the witnesses
-/// 
+
+pub struct TsgKnowOutcome {
+    known_outcome: ExchangeOutcome
+}
+
+impl TsgFramework for TsgKnowOutcome {
+    fn tsg_algorithm(&self, msgs: Vec<message::MessageAndPubkey>) -> (Verdict, Verdict) {
+        return tsg_know_outcome(msgs, self.known_outcome.clone()).unwrap();
+    }
+}
+
 pub fn tsg_know_outcome(
     msgs: Vec<message::MessageAndPubkey>,
     known_outcome: ExchangeOutcome
-) -> Option<(verdict::TxVerdict, verdict::TxVerdict)> {
+) -> Option<(Verdict, Verdict)> {
     let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
     // determine verdict for witnesses
@@ -131,8 +146,8 @@ pub fn tsg_know_outcome(
         }
     }
 
-    let tn_verdicts = verdict::generate_tx_verdict(&tn_sigs, tn_verdicts_outcomes);
-    let wn_verdicts = verdict::generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
+    let tn_verdicts = generate_tx_verdict(&tn_sigs, tn_verdicts_outcomes);
+    let wn_verdicts = generate_tx_verdict(&wn_sigs, wn_verdicts_outcomes);
 
     return Some((tn_verdicts, wn_verdicts))
 }
@@ -143,12 +158,23 @@ pub fn tsg_know_outcome(
 /// those outside.
 /// 
 /// Returns the verdicts for the transacting nodes, and then the witnesses
-/// 
+
+pub struct TsgOrganization {
+    org_pubkey: String,
+    default_reliability: f32
+}
+
+impl TsgFramework for TsgOrganization {
+    fn tsg_algorithm(&self, msgs: Vec<message::MessageAndPubkey>) -> (Verdict, Verdict) {
+        return tsg_organization(msgs, self.org_pubkey.clone(), self.default_reliability).unwrap();
+    }
+}
+
 pub fn tsg_organization(
     msgs: Vec<message::MessageAndPubkey>,
     org_pubkey: String,
     default_reliability: f32
-) -> (verdict::TxVerdict, verdict::TxVerdict) {
+) -> Option<(Verdict, Verdict)> {
     // after the tx has been verified, these sigs can act as temporary identities of the participants
     let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
@@ -170,16 +196,24 @@ pub fn tsg_organization(
         }
     }
 
+    let mut ret_none = false;
     let outcomes: Vec<Vec<bool>> = witness_statements.into_iter().map(|ws| {
         match ws{
             Outcome::ExchangeApplication(outcome) => {
                 return outcome;
             },
-            _ => panic!("Not an exhange outcome")
+            _ => {
+                ret_none = true;
+                return vec![false];
+            }
         }
     }).collect();
 
+    if ret_none {
+        return None;
+    }
+
     let predicted_outcome = predict_outcome::predict_outcome(outcomes, witness_reliabilities);
 
-    return tsg_know_outcome(msgs, predicted_outcome).unwrap();
+    return tsg_know_outcome(msgs, predicted_outcome);
 }
