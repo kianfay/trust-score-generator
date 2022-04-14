@@ -56,7 +56,7 @@ pub enum ApplicationMsg {
 // Each Contract kind is for a specific application. Storing the
 // contracts as en emum allows for abstraction away from the 
 // event protocol application. 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub enum Contract {
 	ExchangeApplication(ExchangeContract),
 	MeetingApplication(MeetingContract)

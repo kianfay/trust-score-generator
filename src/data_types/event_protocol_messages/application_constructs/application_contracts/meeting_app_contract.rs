@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 ////
 //// MEETING APPLICATION CONTRACT
 ////
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct MeetingContract {
 	pub purpose: String,
 	pub time: UnixTimestamp,
