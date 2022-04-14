@@ -10,8 +10,12 @@ use serde::{Deserialize, Serialize};
 ////
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct MeetingContract {
+	pub channel_address: String,
 	pub purpose: String,
+	
+	//metadata
 	pub time: UnixTimestamp,
 	pub location: CoordinateDMSFormat,
+	pub timeout: u32
 }
 

@@ -2,7 +2,7 @@ use crate::data_types::event_protocol_messages::{
     event_protocol_messages::Contract,
     signatures::{
         organization_cert::{
-            OrgCert
+            OrganizationCertificate
         },
         sig::Sig
     }
@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 pub struct WitnessPreSig {
     pub contract: Contract,
     pub signer_channel_pubkey: String,
-    pub org_cert: OrgCert,
+    pub org_cert: OrganizationCertificate,
     pub timeout: u32,
 }
 
@@ -24,7 +24,7 @@ pub struct WitnessPreSig {
 pub struct WitnessSig {
     pub contract: Contract,
     pub signer_channel_pubkey: String,
-    pub org_cert: OrgCert,
+    pub org_cert: OrganizationCertificate,
     pub timeout: u32,
     pub signer_did_pubkey: String,
     pub signature: Vec<u8>,

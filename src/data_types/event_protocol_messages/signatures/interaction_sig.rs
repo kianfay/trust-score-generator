@@ -5,7 +5,7 @@ use crate::data_types::event_protocol_messages::{
     application_constructs::application_contracts::utility_types::WitnessUsers,
     signatures::{
         organization_cert::{
-            OrgCert
+            OrganizationCertificate
         },
         sig::Sig
     }
@@ -20,7 +20,7 @@ pub struct InteractionPreSig {
     pub signer_channel_pubkey: String,
     pub witnesses: WitnessUsers,
     pub wit_node_sigs: ArrayOfWnSignituresBytes,
-    pub org_cert: OrgCert,
+    pub org_cert: OrganizationCertificate,
     pub timeout: u32,
 }
 
@@ -31,7 +31,7 @@ pub struct InteractionSig {
     pub signer_channel_pubkey: String,
     pub witnesses: WitnessUsers,
     pub wit_node_sigs: ArrayOfWnSignituresBytes,
-    pub org_cert: OrgCert,
+    pub org_cert: OrganizationCertificate,
     pub timeout: u32,
     pub signer_did_pubkey: String,
     pub signature: Vec<u8>,

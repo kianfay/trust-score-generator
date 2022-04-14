@@ -4,13 +4,13 @@ use serde::{Deserialize, Serialize};
 // key, the timeout(sec) of the certificate and the sig of all this information. This would be 
 // derived from a certificate on the participants DID.
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct OrgCertPreSig {
+pub struct OrganizationCertificatePreSig {
     pub client_pubkey: String,
     pub timeout: u32,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct OrgCert {
+pub struct OrganizationCertificate {
     pub client_pubkey: String,
     pub timeout: u32,
     pub org_pubkey: String,
