@@ -1,10 +1,5 @@
 use crate::{
-    data_types::{
-        event_protocol_messages::signatures::organization_cert::{
-            OrganizationCertificate
-        },
-        tsg_data_types::verdict::Verdict
-    }
+    data_types::tsg_data_types::verdict::Verdict
 };
 
 use std::collections::HashMap;

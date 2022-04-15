@@ -5,7 +5,6 @@ use crate::{
             verdict,
             message
         },
-        event_protocol_messages::event_protocol_messages::Outcome,
     },
     trust_score_generators::exchange_application_tsg::trivial_tsg
 };

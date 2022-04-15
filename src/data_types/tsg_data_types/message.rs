@@ -1,9 +1,6 @@
 use crate::{
     data_types::event_protocol_messages::{
         event_protocol_messages::Outcome,
-        application_constructs::application_outcomes::{
-            exchange_app_outcome::ExchangeOutcome
-        },
         signatures::{
             interaction_sig::InteractionSig,
             witness_sig::WitnessSig
