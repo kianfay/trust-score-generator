@@ -21,5 +21,5 @@ pub struct ExchangeContract {
 	//metadata
 	pub time: UnixTimestamp,
 	pub location: CoordinateDMSFormat,
-	pub timeout: u32
+	pub timeout: UnixTimestamp
 }
