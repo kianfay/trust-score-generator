@@ -1,5 +1,5 @@
 [package]
-name = "trust-score-generator"
+name = "wb-reputation-system"
 version = "0.1.0"
 edition = "2021"
 
