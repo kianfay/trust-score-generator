@@ -98,7 +98,7 @@ pub enum HonestWho{
 /// Returns the verdicts for the transacting nodes, and then the witnesses
 
 pub struct TsgKnowOutcome {
-    known_outcome: ExchangeOutcome
+    pub known_outcome: ExchangeOutcome
 }
 
 impl TsgFramework for TsgKnowOutcome {
