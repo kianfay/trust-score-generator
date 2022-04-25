@@ -160,8 +160,8 @@ pub fn tsg_know_outcome(
 /// Returns the verdicts for the transacting nodes, and then the witnesses
 
 pub struct TsgOrganization {
-    org_pubkey: String,
-    default_reputation: f32
+    pub org_pubkey: String,
+    pub default_reputation: f32
 }
 
 impl TsgFramework for TsgOrganization {

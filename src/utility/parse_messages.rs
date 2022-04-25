@@ -4,7 +4,7 @@ use crate::{
         event_protocol_messages::{
             signatures::sig::Sig,
             event_protocol_messages::{
-                Message, ArrayOfTxSignitures, ArrayOfWnSignitures
+                Message, ArrayOfIntSignitures, ArrayOfWnSignitures
             }
         },
         tsg_data_types::message
@@ -76,7 +76,7 @@ pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
             tx_client_sigs,
         } => {
             let ArrayOfWnSignitures(wit_sigs) = wit_node_sigs;
-            let ArrayOfTxSignitures(tn_sigs) = tx_client_sigs;
+            let ArrayOfIntSignitures(tn_sigs) = tx_client_sigs;
 
             // combine these arrays of types WitnessSig and TransactingSig
             // respectively into an array of Sig

@@ -6,7 +6,7 @@ use crate::{
             witness_sig::WitnessSig
         },
         event_protocol_messages::{
-            ArrayOfTxSignitures, ArrayOfWnSignitures, Message
+            ArrayOfIntSignitures, ArrayOfWnSignitures, Message
         },
     },
     utility::parse_messages::is_tx_msg as is_tx_msg_low_level
@@ -83,8 +83,8 @@ impl MessageAndPubkey{
                 match message {
                     Message::InteractionMsg {
                         contract: _, witnesses: _,
-                        wit_node_sigs: ArrayOfWnSignitures(wit_node_sigs),
-                        tx_client_sigs: ArrayOfTxSignitures(tx_client_sigs),
+                        witness_sigs: ArrayOfWnSignitures(wit_node_sigs),
+                        interaction_sigs: ArrayOfIntSignitures(tx_client_sigs),
                     } => Some((tx_client_sigs.clone(), wit_node_sigs.clone())),
                     _ => return None
                 }

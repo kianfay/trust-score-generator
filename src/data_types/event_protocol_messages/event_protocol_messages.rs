@@ -31,8 +31,8 @@ pub enum Message{
     InteractionMsg {
         contract: Contract,
         witnesses: WitnessUsers,
-        wit_node_sigs: ArrayOfWnSignitures,
-        tx_client_sigs: ArrayOfTxSignitures,
+        witness_sigs: ArrayOfWnSignitures,
+        interaction_sigs: ArrayOfIntSignitures,
     },
     WitnessStatement {
         outcome: Outcome
@@ -78,6 +78,6 @@ pub enum Outcome {
 
 // signitures are also simply arrays of bytes
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct ArrayOfTxSignitures(pub Vec<InteractionSig>);
+pub struct ArrayOfIntSignitures(pub Vec<InteractionSig>);
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ArrayOfWnSignitures(pub Vec<WitnessSig>);
