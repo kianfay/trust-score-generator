@@ -161,24 +161,24 @@ pub fn tsg_know_outcome(
 
 pub struct TsgOrganization {
     org_pubkey: String,
-    default_reliability: f32
+    default_reputation: f32
 }
 
 impl TsgFramework for TsgOrganization {
     fn tsg_algorithm(&self, msgs: Vec<message::MessageAndPubkey>) -> (Verdict, Verdict) {
-        return tsg_organization(msgs, self.org_pubkey.clone(), self.default_reliability).unwrap();
+        return tsg_organization(msgs, self.org_pubkey.clone(), self.default_reputation).unwrap();
     }
 }
 
 pub fn tsg_organization(
     msgs: Vec<message::MessageAndPubkey>,
     org_pubkey: String,
-    default_reliability: f32
+    default_reputation: f32
 ) -> Option<(Verdict, Verdict)> {
     // after the tx has been verified, these sigs can act as temporary identities of the participants
     let (tn_sigs, wn_sigs) = msgs[0].get_sigs_of_participants().unwrap();
 
-    // predicts the outcome by sassigning reliability scores to witnesses and averaging the outcomes
+    // predicts the outcome by asssigning reputation scores to witnesses and averaging the outcomes
     let mut witness_statements: Vec<Outcome> = Vec::new();
     let mut witness_reliabilities: Vec<f32> = Vec::new();
     for msg in msgs.clone() {
@@ -191,7 +191,7 @@ pub fn tsg_organization(
             if org_pubkey == cur_did.org_cert.org_pubkey {
                 witness_reliabilities.push(1.0);
             } else {
-                witness_reliabilities.push(default_reliability);
+                witness_reliabilities.push(default_reputation);
             }
         }
     }
