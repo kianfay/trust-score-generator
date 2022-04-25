@@ -1,5 +1,9 @@
 use crate::{
-    data_types::tsg_data_types::verdict::Verdict
+    data_types::tsg_data_types::{
+        message::MessageAndPubkey,
+        verdict::Verdict
+    },
+    trust_score_generators::tsg_framework::TsgFramework
 };
 
 use std::collections::HashMap;
@@ -92,6 +96,15 @@ impl<C,I> Identity<C,I> {
                 str.push_str(&next)
             });
         return str;
+    }
+
+    /// Runs a TSG algorithm which implements TSGFramework, and automatically
+    /// adds the verdicts into this user's Reputation Map.
+    pub fn run_tsg_and_include_in_rm<T>(&mut self, messages: Vec<MessageAndPubkey>, tsg_algo: T) 
+    where T : TsgFramework {
+        let (tn_verdicts, wn_verdicts) = tsg_algo.tsg_algorithm(messages);
+        self.update_reliability(tn_verdicts.clone());
+        self.update_reliability(wn_verdicts.clone());
     }
 }
 
