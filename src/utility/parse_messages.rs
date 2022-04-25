@@ -72,11 +72,11 @@ pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
         Message::InteractionMsg {
             contract: _,
             witnesses: _,
-            wit_node_sigs,
-            tx_client_sigs,
+            witness_sigs,
+            interaction_sigs,
         } => {
-            let ArrayOfWnSignitures(wit_sigs) = wit_node_sigs;
-            let ArrayOfIntSignitures(tn_sigs) = tx_client_sigs;
+            let ArrayOfWnSignitures(wit_sigs) = witness_sigs;
+            let ArrayOfIntSignitures(tn_sigs) = interaction_sigs;
 
             // combine these arrays of types WitnessSig and TransactingSig
             // respectively into an array of Sig
@@ -104,7 +104,7 @@ pub fn get_sigs(tx: Message) -> Option<Vec<Box<dyn Sig>>> {
 pub fn is_tx_msg(msg: &Message) -> bool {
     match msg {
         Message::InteractionMsg 
-            {contract: _, witnesses: _, wit_node_sigs: _, tx_client_sigs: _}
+            {contract: _, witnesses: _, witness_sigs: _, interaction_sigs: _}
                 => return true,
         _       => return false
     };
