@@ -13,12 +13,12 @@ use serde::{Deserialize, Serialize};
 ////
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct ExchangeContract {
+	// main fields
 	pub channel_address: String,
 	pub offer: String,
 	pub participants: ParticipantUsers,
 	pub compensation: CompensationJson,
-	
-	//metadata
+	// metadata fields
 	pub time: UnixTimestamp,
 	pub location: CoordinateDMSFormat,
 	pub timeout: UnixTimestamp
